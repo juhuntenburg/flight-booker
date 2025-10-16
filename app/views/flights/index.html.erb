@@ -43,28 +43,35 @@
 <% end %>
 
 <% if @flights.any? %>
-  <table>
-    <thead>
-    <tr>
-      <th>#</th>
-      <th>From</th>
-      <th>To</th>
-      <th>Departs</th>
-      <th>Duration</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% @flights.each_with_index do |flight, i| %>
+  <%= form_with url: new_booking_path, method: :get, local: true do |form| %>
+    <table>
+      <thead>
       <tr>
-        <td><%= i + 1 %></td>
-        <td><%= flight.departure_airport.name %></td>
-        <td><%= flight.arrival_airport.name %></td>
-        <td><%= flight.departure_time.strftime("%b %d, %Y %H:%M") %></td>
-        <td><%= "#{flight.duration / 60}h #{format('%02d', flight.duration % 60)}m" %></td>
+        <th></th>
+        <th>From</th>
+        <th>To</th>
+        <th>Departs</th>
+        <th>Duration</th>
       </tr>
-    <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+      <% @flights.each do |flight| %>
+        <tr>
+          <td><%= form.radio_button :flight_id, flight.id %></td>
+          <td><%= flight.departure_airport.name %></td>
+          <td><%= flight.arrival_airport.name %></td>
+          <td><%= flight.departure_time.strftime("%b %d, %Y %H:%M") %></td>
+          <td><%= "#{flight.duration / 60}h #{format('%02d', flight.duration % 60)}m" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <%= form.hidden_field :n_passengers, value: params[:n_passengers] %>
+    <p>
+      <%= form.submit "Select Flight" %>
+    </p>
+
+  <% end %>
 <% else %>
   <p>No flights found.</p>
 <% end %>

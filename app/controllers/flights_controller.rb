@@ -7,15 +7,12 @@ class FlightsController < ApplicationController
                              .uniq
                              .sort
 
-    if flight_params.values.all?(&:blank?)
-      @flights = []
-    else
+    @flights = []
+    unless flight_params.values.all?(&:blank?)
       @flights =
         Flight.where(departure_airport_id: flight_params[:departure_airport_id])
               .where(arrival_airport_id: flight_params[:arrival_airport_id])
               .where("DATE(departure_time) = ?", flight_params[:departure_date])
-      puts "FLIGHTS #{@flights.size}"
-      render :index
     end
 
 
@@ -29,8 +26,7 @@ class FlightsController < ApplicationController
       :arrival_airport_id,
       :departure_date,
       :n_passengers,
-      :commit)
-          .tap { |p| p.delete(:commit) }
+      :commit).tap { |p| p.delete(:commit) }
   end
 
 end
