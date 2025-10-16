@@ -9,11 +9,7 @@
 #   end
 
 airports = %w[
-  ATL LAX ORD DFW DEN JFK SFO SEA LAS MCO
-  CLT EWR PHX MIA IAH BOS MSP DTW FLL PHL
-  LGA BWI SLC DCA SAN MDW TPA HNL IAD DAL
-  HOU AUS OAK RDU SMF SJC SNA STL PIT MCI
-  CLE CMH PDX MKE BNA MSY RSW SAT IND JAX
+  ATL LAX ORD JFK
 ]
 
 airports.each do |code|
@@ -21,3 +17,24 @@ airports.each do |code|
 end
 
 puts "Seeded #{Airport.count} airports."
+
+def random_time_within_days(days)
+  rand(days * 24 * 60).minutes.from_now
+end
+
+def random_duration
+  [90, 120, 150, 180, 240, 300].sample # duration in minutes
+end
+
+airports = Airport.all.to_a
+100.times do
+  departure_airport, arrival_airport = airports.sample(2)
+  Flight.create!(
+    departure_airport: departure_airport,
+    arrival_airport: arrival_airport,
+    departure_time: random_time_within_days(2),
+    duration: random_duration
+  )
+end
+
+puts "Seeded #{Flight.count} flights."

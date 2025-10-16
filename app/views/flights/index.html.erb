@@ -1,0 +1,70 @@
+<h1>Find Your Flight</h1>
+
+<%= form_with url: flights_path, method: :get, local: true do |form| %>
+  <p>
+  <div>
+    <%= form.label :departure_airport_id, "From:" %>
+    <%= form.select :departure_airport_id,
+                    options_from_collection_for_select(@airports, :id, :name, params[:departure_airport_id]),
+                    prompt: "Select departure" %>
+  </div>
+  </p>
+
+  <p>
+  <div>
+    <%= form.label :arrival_airport_id, "To:" %>
+    <%= form.select :arrival_airport_id,
+                    options_from_collection_for_select(@airports, :id, :name, params[:arrival_airport_id]),
+                    prompt: "Select arrival" %>
+  </div>
+  </p>
+
+  <p>
+  <div>
+    <%= form.label :departure_date, "Date:" %>
+    <%= form.select :departure_date,
+                    options_for_select(@departure_dates, params[:departure_date]),
+                    prompt: "Select date" %>
+  </div>
+  </p>
+
+  <p>
+  <div>
+    <%= form.label :n_passengers, "Passengers:" %>
+    <%= form.select :n_passengers,
+                    options_for_select([1, 2, 3, 4], params[:n_passengers]),
+                    prompt: "Select number" %>
+  </div>
+  </p>
+
+  <p>
+  <%= form.submit "Search Flights" %>
+  </p>
+<% end %>
+
+<% if @flights.any? %>
+  <table>
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Departs</th>
+      <th>Duration</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @flights.each_with_index do |flight, i| %>
+      <tr>
+        <td><%= i + 1 %></td>
+        <td><%= flight.departure_airport.name %></td>
+        <td><%= flight.arrival_airport.name %></td>
+        <td><%= flight.departure_time.strftime("%b %d, %Y %H:%M") %></td>
+        <td><%= "#{flight.duration / 60}h #{format('%02d', flight.duration % 60)}m" %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No flights found.</p>
+<% end %>
