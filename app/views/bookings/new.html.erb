@@ -1,4 +1,25 @@
-<%=@flight.departure_airport.name %>
-<%=@flight.arrival_airport.name %>
-<%=@flight.departure_time %>
-<%=@flight.duration %>
+<h1>Your selected flight</h1>
+
+<p>
+  <strong>From: </strong><%=@flight.departure_airport.name %><br>
+  <strong>To: </strong><%=@flight.arrival_airport.name %><br>
+  <strong>Departure: </strong><%= @flight.departure_time.strftime("%b %d, %Y %H:%M") %><br>
+  <strong>Duration: </strong><%= "#{@flight.duration / 60}h #{format('%02d', @flight.duration % 60)}m" %><br>
+</p>
+
+<%= form_with model: @booking do |form| %>
+  <%i=1%>
+  <%= form.fields_for :passengers do |sub_form| %>
+    <h3>Passenger <%=i%>:</h3>
+    <%= sub_form.label :name %>
+    <%= sub_form.text_field :name %><br><br>
+    <%= sub_form.label :email %>
+    <%= sub_form.text_field :email %>
+    <%i+=1%>
+  <% end %>
+  <p>
+    <%= hidden_field_tag :n_passengers, params[:n_passengers] %>
+    <%= hidden_field_tag :"booking[flight_id]", @booking.flight_id %>
+    <%= form.submit "Place booking" %>
+  </p>
+<% end %>

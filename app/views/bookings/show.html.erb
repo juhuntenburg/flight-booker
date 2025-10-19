@@ -1,0 +1,42 @@
+<h1>Booking Confirmation</h1>
+
+<section>
+  <h2>Flight Details</h2>
+  <p>
+    <strong>Route:</strong>
+    <%= @booking.flight.departure_airport.name %> →
+    <%= @booking.flight.arrival_airport.name %><br>
+
+    <strong>Departure:</strong>
+    <%= @booking.flight.departure_time.strftime("%b %d, %Y %H:%M") %><br>
+
+    <strong>Duration:</strong>
+    <%= "#{@booking.flight.duration / 60}h #{format('%02d', @booking.flight.duration % 60)}m" %>
+  </p>
+</section>
+
+<hr>
+
+<section>
+  <h2>Passengers</h2>
+  <% if @booking.passengers.any? %>
+    <ul>
+      <% @booking.passengers.each_with_index do |passenger, i| %>
+        <li>
+          <strong>Passenger <%= i + 1 %>:</strong><br>
+          Name: <%= passenger.name %><br>
+          Email: <%= passenger.email %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No passengers found for this booking.</p>
+  <% end %>
+</section>
+
+<hr>
+
+<section>
+  <p><strong>Booking Reference:</strong> <%= @booking.id %></p>
+  <%= link_to "Back to Flights", flights_path %>
+</section>

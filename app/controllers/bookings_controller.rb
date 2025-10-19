@@ -1,13 +1,38 @@
 class BookingsController < ApplicationController
+
   def new
-    @flight = Flight.find(booking_params[:flight_id])
+    @flight = Flight.find(request_params[:flight_id])
+    @booking = Booking.new(flight: @flight)
+    request_params[:n_passengers].to_i.times { @booking.passengers.build }
+  end
+
+  def create
+    @booking = Booking.new(booking_params[:booking])
+
+    if @booking.save
+      redirect_to @booking, notice: "Booking confirmed!"
+    else
+      @flight = @booking.flight
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def show
+    @booking = Booking.find(params[:id])
   end
 
   private
 
-  def booking_params
+  def request_params
     params.permit(:flight_id,
                   :n_passengers,
                   :commit).tap { |p| p.delete(:commit) }
+  end
+
+  def booking_params
+    return params.permit(
+      :n_passengers,
+      booking: [:flight_id, passengers_attributes: [[:id, :name, :email]]]
+    )
   end
 end
