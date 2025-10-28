@@ -1,0 +1,24 @@
+<h1>Booking confirmed!</h1>
+<p>
+  Dear <%= @passenger.name %>,<br><br>
+
+  Thank you for booking with us. Please find your flight details below.<br><br>
+
+  We look forward to welcoming you on board!<br>
+  RainbowWings<br><br>
+</p>
+
+<p>
+  <h2>Flight Details</h2>
+  <p>
+    <strong>Route:</strong>
+    <%= @booking.flight.departure_airport.name %> →
+    <%= @booking.flight.arrival_airport.name %><br>
+
+    <strong>Departure:</strong>
+    <%= @booking.flight.departure_time.strftime("%b %d, %Y %H:%M") %><br>
+
+    <strong>Duration:</strong>
+    <%= "#{@booking.flight.duration / 60}h #{format('%02d', @booking.flight.duration % 60)}m" %>
+  </p>
+</p>

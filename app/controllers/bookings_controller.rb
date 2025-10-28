@@ -10,6 +10,13 @@ class BookingsController < ApplicationController
     @booking = Booking.new(booking_params[:booking])
 
     if @booking.save
+      @booking.passengers.each do |passenger|
+        PassengerMailer.with(
+          passenger: passenger,
+          booking: @booking
+        ).booking_confirmation.deliver_later
+      end
+
       redirect_to @booking, notice: "Booking confirmed!"
     else
       @flight = @booking.flight

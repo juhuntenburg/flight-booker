@@ -1,0 +1,20 @@
+Booking confirmed!
+==================
+
+Dear <%= @passenger.name %>,
+
+Thank you for booking with us. Please find your flight details below.
+We look forward to welcoming you on board!
+RainbowWings
+
+Flight Details
+--------------
+Route:
+<%= @booking.flight.departure_airport.name %> →
+<%= @booking.flight.arrival_airport.name %>
+
+Departure:
+<%= @booking.flight.departure_time.strftime("%b %d, %Y %H:%M") %>
+
+Duration:
+<%= "#{@booking.flight.duration / 60}h #{format('%02d', @booking.flight.duration % 60)}m" %>
